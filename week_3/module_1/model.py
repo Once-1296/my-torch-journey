@@ -7,18 +7,15 @@ class DeepFashionClassifier(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        
-        # nn.Sequential is a clean way to stack layers in order
-        self.network = nn.Sequential(
-            nn.Linear(784, 128),  # Hidden Layer 1: 784 inputs -> 128 neurons
-            nn.ReLU(),            # Activation
-            nn.Linear(128, 64),   # Hidden Layer 2: 128 inputs -> 64 neurons
-            nn.ReLU(),            # Activation
-            nn.Linear(64, 10)     # Output Layer: 64 inputs -> 10 categories
+        self.network =nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2) ,# This shrinks the image from 28x28 to 14x14)
+            nn.Flatten(),
+            nn.Linear(16 * 14 * 14, 10)  #(16 channels * 14 height * 14 width)
         )
-
     def forward(self, x):
-        x = self.flatten(x)
+        # x = self.flatten(x) no flatten
         return self.network(x)
 
 # 2. The Right Loss Function
